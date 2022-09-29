@@ -2987,7 +2987,14 @@ void led() {
 #endif
       cabLight.off();
       sideLight.pwm(constrain(sideLightsBrightness - crankingDim, (sideLightsBrightness / 2), 255));
+#ifdef FOG_LIGHTS_ARE_DRIVING_LIGHTS
+      if (headLightsHighBeamOn)
+        headLightsSub(true, true, true, false);
+      else
+        headLightsSub(true, false, true, false);
+#else
       headLightsSub(true, true, true, false);
+#endif
       brakeLightsSub(rearlightDimmedBrightness); // 50 brightness, if not braking
       break;
 

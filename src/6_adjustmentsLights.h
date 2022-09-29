@@ -32,6 +32,7 @@
 //#define THIRD_BRAKELIGHT // if defined, pin 32 is used for a third brake light, otherwise for a trailer presence switch (pulled to GND = no trailer attached)
 #define FLICKERING_WHILE_CRANKING // The lights will flicker a bit during engine cranking, otherwise they are just a bit dimmed
 #define HAZARDS_WHILE_5TH_WHEEL_UNLOCKED // Hazards on, if 5th wheel is unlocked
+#define FOG_LIGHTS_ARE_DRIVING_LIGHTS    // No fog lights, connect driving or spot lights to fog light pin. Lights turn off on low beam
 
 // Adjust the brightness of your lights here -----------------------------------------------------------------------------------------------------
 // All brightness values 0 - 255
