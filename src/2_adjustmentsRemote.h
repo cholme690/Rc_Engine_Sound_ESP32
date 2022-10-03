@@ -1,12 +1,13 @@
 #include <Arduino.h>
 
 // Select (remove //) the remote configuration profile you have:
+#define TURNIGY_9X // Turnigy 9X
 //#define FLYSKY_FS_I6X           // <------- Flysky FS-i6x
 //#define FLYSKY_FS_I6S_EXCAVATOR // <------- Flysky FS-i6s for KABOLITE K336 hydraulic excavator (use IBUS communication setting)
 //#define FLYSKY_GT5              // <------- Flysky GT5 / Reely GT6 EVO / Absima CR6P
 //#define RGT_EX86100             // <------- MT-305 remote delivered with RGT EX86100 crawler (use PWM communication setting)
 //#define GRAUPNER_MZ_12          // <------- Graupner MZ-12 PRO
-#define MICRO_RC                // <------- The car style DIY "Micro RC" remote. Don't use this with standard remotes!
+//#define MICRO_RC                // <------- The car style DIY "Micro RC" remote. Don't use this with standard remotes!
 //#define MICRO_RC_STICK          // <------- The stick based DIY "Micro RC" remote. Don't use this with standard remotes!
 
 // For testing only!
@@ -24,10 +25,10 @@
 
 // SBUS communication (RX header, 13 channels. This is my preferred communication protocol)--------
 /* NOTE! SBUS is causing weird issues with Flysky remotes. Use IBUS instead! */
-#define SBUS_COMMUNICATION // control signals are coming in via the SBUS interface (comment it out for classic PWM RC signals)
+//#define SBUS_COMMUNICATION // control signals are coming in via the SBUS interface (comment it out for classic PWM RC signals)
 // NOTE: "boolean sbusInverted = true / false" was moved to the remote configuration profiles, so you don't have to change it
 uint32_t sbusBaud = 100000; // Standard is 100000. Try to lower it, if your channels are coming in unstable. Working range is about 96000 - 104000.
-#define EMBEDDED_SBUS // SBUS library not used, if defined (let me know, if Flysky remotes are still unstable)
+//#define EMBEDDED_SBUS // SBUS library not used, if defined (let me know, if Flysky remotes are still unstable)
 uint16_t sbusFailsafeTimeout = 100; // Failsafe is triggered after this timeout in milliseconds (about 100)
 
 // IBUS communication (RX header, 13 channels not recommended, NO FAILSAFE, if bad contact in iBUS wiring!) --------
@@ -83,6 +84,72 @@ uint16_t sbusFailsafeTimeout = 100; // Failsafe is triggered after this timeout 
 //
 // (3) Now switch to "Sport" and set the "Rate" of "Ch2" from 100 to 75.
 // Do the exact same thing for "Ch4", but don't change "Ch1" (this one should still be 100 in both modes)!
+
+// Turnigy 9X remote configuration profile ---------------------------------------------------------------------------------------------------
+#ifdef TURNIGY_9X
+
+// Channel assignment (use NONE for non existing channels!)
+// Remote channel #######   // Sound controller channel ##########################################
+#define STEERING 1           // CH1 steering
+#define GEARBOX 2            // CH2 3 position switch for gearbox (left throttle in tracked mode)
+#define THROTTLE 3           // CH3 throttle & brake (right throttle in tracked mode)
+#define HORN 4               // CH4 horn and bluelight / siren
+#define FUNCTION_R 5         // CH5 jake brake, high / low beam, headlight flasher, engine on / off
+#define FUNCTION_L 6         // CH6 indicators, hazards
+#define POT2 NONE            // CH7 pot 2
+#define MODE1 NONE           // CH8 mode 1 switch
+#define MODE2 NONE           // CH9 mode 2 switch
+#define MOMENTARY1 NONE      // CH10
+#define HAZARDS NONE         // CH11
+#define INDICATOR_LEFT NONE  // CH12
+#define INDICATOR_RIGHT NONE // CH13
+
+// Channels reversed or not
+boolean channelReversed[14] = {
+    false, // CH0 (unused)
+    false, // CH1
+    true,  // CH2
+    false, // CH3
+    false, // CH4
+    true,  // CH5
+    false, // CH6
+    false, // CH7
+    false, // CH8
+    false, // CH9
+    false, // CH10
+    false, // CH11
+    false, // CH12
+    false  // CH13
+};
+
+// Channels auto zero adjustment or not (don't use it for channels without spring centered neutral position, switches or unused channels)
+boolean channelAutoZero[14] = {
+    false, // CH0 (unused)
+    true,  // CH1
+    false, // CH2
+    true,  // CH3
+    false, // CH4
+    true,  // CH5
+    true,  // CH6
+    false, // CH7
+    false, // CH8
+    false, // CH9
+    false, // CH10
+    false, // CH11
+    false, // CH12
+    false  // CH13
+};
+
+// Channels signal range calibration -----
+const uint16_t pulseNeutral = 30;
+const uint16_t pulseSpan = 480;
+
+// Automatic or manual modes -----
+//#define AUTO_LIGHTS
+#define AUTO_ENGINE_ON_OFF
+//#define AUTO_INDICATORS
+
+#endif
 
 // Flysky FS-i6X remote configuration profile ---------------------------------------------------------------------------------------------------
 #ifdef FLYSKY_FS_I6X
